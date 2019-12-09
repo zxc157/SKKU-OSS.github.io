@@ -11,7 +11,11 @@ struct Student {
     string major;
     string gender;
     double gpa;
+    Student * next;
 };
+
+Student* list;
+int studentNum;
 
 void printMain(){
     cout << "\n [Main Menu]\n";
@@ -24,10 +28,44 @@ void printMain(){
     return;
 };
 
+void addfile(string fileName){
+    int j = 0;
+    ifstream inFile(fileName);
+    if(!inFile.is_open()){
+        cout << "Error opening file\n";
+        return;
+    }			
+    string line;
+    string sub[6];
+    while(getline(inFile, line)){
+	studentNum++; j++;
+	Student * s = (Student*)malloc(sizeof(Student));
+	stringstream line_s(line);
+	for(int k = 0; k < 6; k++){
+	    getline(line_s, sub[k], ' ');
+	}
+	s->name = sub[0];
+	s->classNum = atoi(sub[1].c_str()); 
+	s->gradeNum = atoi(sub[2].c_str());
+	s->major = sub[3];
+    	s->gender = sub[4];
+	s->gpa = atof(sub[5].c_str()); 
+	s->next = NULL;
+	if(list==NULL){
+	    list = s;
+	}
+	else{
+	    s->next = list;
+	    list = s;
+	}
+    }
+    cout <<"\n"<< j << " students added\n";
+    inFile.close();		
+    return;
+}
+
 int main(){
     char a, c;
-    int studentNum = 0;
-    Student s[100];
     while (true) {
 	printMain();
 	cin >> c;
@@ -46,51 +84,41 @@ int main(){
 			cout << " [With file]\n";
 			cout << "Enter the file name: ";
 			cin >> name;
-			ifstream inFile(name);
-    			if(! inFile.is_open()){
-			    cout << "Error opening file\n";
-			    break;
-			}
-					
-			string line;
-			string sub[6];
-			int j = 0;
-			while(getline(inFile, line)){
-			    stringstream line_s(line);
-			    j++;
-			    for(int k = 0; k < 6; k++){
-				getline(line_s, sub[k], ' ');
-			    }
-			    s[studentNum].name = sub[0];
-			    s[studentNum].classNum = atoi(sub[1].c_str()); 
-			    s[studentNum].gradeNum = atoi(sub[2].c_str());
-			    s[studentNum].major = sub[3];
-			    s[studentNum].gender = sub[4];
-			    s[studentNum++].gpa = atof(sub[5].c_str()); 
-			}
-			cout <<"\n"<< j << " students added\n";
-			inFile.close();
-			break;
+			addfile(name);
+		break;
 		    }
 		    case '2':{
 			string line;
+			Student * s = (Student*)malloc(sizeof(Student));
 			cout << " [With direct input]\n";
-			cin.ignore();
+		    	cin.ignore();
 			cout << "Enter student's name: ";
-			getline(cin, s[studentNum].name);
+			getline(cin, line);
+			s->name = line;
 			cout << "Enter student's class: ";
 			getline(cin, line);
-			s[studentNum].classNum = atoi(line.c_str()); 
+			s->classNum = atoi(line.c_str()); 
 			cout << "Enter student's grade: ";
 			getline(cin, line);
-			s[studentNum].gradeNum = atoi(line.c_str());
+			s->gradeNum = atoi(line.c_str());
 			cout << "Enter student's major: ";
-			getline(cin, s[studentNum].major);
+			getline(cin, line);
+			s->major = line;
 			cout << "Enter student's gender(f/m): ";
-			getline(cin, s[studentNum].gender);
+			getline(cin, line);
+			s->gender = line;
 			cout << "Enter student's gpa: ";
 			getline(cin, line);
-		    	s[studentNum++].gpa = atof(line.c_str());
+		    	s->gpa = atof(line.c_str());
+			s->next = NULL;
+			if(list==NULL){
+			    list = s;
+			}
+			else{
+			    s->next = list;
+			    list = s;
+			}
+			studentNum++;
 			cout << "\n1 student added\n";
 			break;
 		    }
@@ -104,8 +132,10 @@ int main(){
 	    	cout << "===============================================\n";
 		cout << "Name\tclass\tgrade\tmajor\tgender\tgpa\n";
 		cout << "-----------------------------------------------\n";
-		for(int i = 0; i < studentNum; i++){
-		cout << s[i].name << "\t" << s[i].classNum << "\t" << s[i].gradeNum << "\t" << s[i].major << "\t" << s[i].gender << "\t" << s[i].gpa << endl;
+		Student * cur = list;
+		while(cur != NULL){
+		    cout << cur->name << "\t" << cur->classNum << "\t" << cur->gradeNum << "\t" << cur->major << "\t" << cur->gender << "\t" << cur->gpa << endl;
+		cur = cur->next;
 		}	
 	    }
 	    default:
