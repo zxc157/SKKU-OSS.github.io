@@ -1,7 +1,7 @@
 #include <fstream>
-#include <iostream>
 #include <string>
-
+#include <sstream>
+#include <iostream>
 using namespace std;
 
 struct Student {
@@ -34,7 +34,7 @@ int main(){
 	printMain();
 	cin >> c;
 	switch (c) {
-	    case '0':{
+	    case '0': {
 		exit(0);
 	    }
 	    case '1': {	
@@ -46,13 +46,13 @@ int main(){
 		    case '1':{
 			char name[20];
 			cout << " [With file]\n";
-			cout << "Enter your file name: ";
+			cout << "Enter the file name: ";
 			cin >> name;
 			ifstream inFile(name);
 			if(! inFile.is_open()){
 			    cout << "Error opening file\n";
 			    break;
-			}
+			}			
 			break;
 		    }
 		    case '2':{
@@ -74,6 +74,7 @@ int main(){
 			cout << "Enter student's gpa: ";
 			getline(cin, line);
 		    	s[studentNum++].gpa = atof(line.c_str());
+			cout << "1 student added\n";
 			break;
 		    }
 		    default:
@@ -82,8 +83,12 @@ int main(){
 	        break;
 	    }
 	    case '2': {
-
-	    }	
+	    	cout << "\n [Students]\n";
+		cout << "===========================\n";
+		for(int i = 0; i < studentNum; i++){
+		cout << s[i].name << " " << s[i].classNum << " " << s[i].gradeNum << " " << s[i].major << " " << s[i].gender << " " << s[i].gpa << endl;
+		}	
+	    }
 	    default:
 	        break;
 	}
