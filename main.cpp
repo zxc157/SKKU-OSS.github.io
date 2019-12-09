@@ -38,10 +38,51 @@ int main(){
 		exit(0);
 	    }
 	    case '1': {	
-		break;
+	        cout << "\n [Add Student]\n";
+		cout << "===========================\n";
+		cout << "1) with file 2) with input\n";
+		cin >> a;
+		switch(a){
+		    case '1':{
+			char name[20];
+			cout << " [With file]\n";
+			cout << "Enter your file name: ";
+			cin >> name;
+			ifstream inFile(name);
+			if(! inFile.is_open()){
+			    cout << "Error opening file\n";
+			    break;
+			}
+			break;
+		    }
+		    case '2':{
+			string line;
+			cout << " [With direct input]\n";
+			cin.ignore();
+			cout << "Enter student's name: ";
+			getline(cin, s[studentNum].name);
+			cout << "Enter student's class: ";
+			getline(cin, line);
+			s[studentNum].classNum = atoi(line.c_str()); 
+			cout << "Enter student's grade: ";
+			getline(cin, line);
+			s[studentNum].gradeNum = atoi(line.c_str());
+			cout << "Enter student's major: ";
+			getline(cin, s[studentNum].major);
+			cout << "Enter student's gender(f/m): ";
+			getline(cin, s[studentNum].gender);
+			cout << "Enter student's gpa: ";
+			getline(cin, line);
+		    	s[studentNum++].gpa = atof(line.c_str());
+			break;
+		    }
+		    default:
+			break;
+		}
+	        break;
 	    }
 	    case '2': {
-		break;
+
 	    }	
 	    default:
 	        break;
