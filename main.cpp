@@ -1,15 +1,16 @@
 #include <fstream>
 #include <string>
+#include <string.h>
 #include <sstream>
 #include <iostream>
 using namespace std;
 
 struct Student {
-    string name;
+    char name[20];
     int classNum;
     int gradeNum;
-    string major;
-    string gender;
+    char major[20];
+    char gender[2];
     double gpa;
     Student * next;
 };
@@ -20,21 +21,21 @@ int studentNum;
 void printMain(){
     cout << "\n [Main Menu]\n";
     cout << "===============================================\n";
-    cout << "  1. Add Student\t2. Print Students\n";
-    //cout << "  2. Delete Student\n";
+    cout << "  1. Add Student\t 2. Delete Student\n";
+    cout << "  3. Print Students\n";
     //cout << "  3. Edit Student\t4. Search Student\n";
     //cout << "  5. Group Assignment\n";
     cout << "  0. Exit\n";
     return;
 };
 
-void addfile(string fileName){
+void addfile(char* fileName){
     int j = 0;
     ifstream inFile(fileName);
     if(!inFile.is_open()){
         cout << "Error opening file\n";
         return;
-    }			
+    }    
     string line;
     string sub[6];
     while(getline(inFile, line)){
@@ -44,12 +45,12 @@ void addfile(string fileName){
 	for(int k = 0; k < 6; k++){
 	    getline(line_s, sub[k], ' ');
 	}
-	s->name = sub[0];
+	strcpy(s->name,sub[0].c_str());
 	s->classNum = atoi(sub[1].c_str()); 
 	s->gradeNum = atoi(sub[2].c_str());
-	s->major = sub[3];
-    	s->gender = sub[4];
-	s->gpa = atof(sub[5].c_str()); 
+	strcpy(s->major,sub[3].c_str());
+    	strcpy(s->gender, sub[4].c_str());
+	s->gpa = atof(sub[5].c_str());
 	s->next = NULL;
 	if(list==NULL){
 	    list = s;
@@ -62,6 +63,36 @@ void addfile(string fileName){
     cout <<"\n"<< j << " students added\n";
     inFile.close();		
     return;
+}
+
+void remove (char* studentName){
+    if(list == NULL){
+        cout << "Student name is not found\n";
+	return;
+    }
+    if(!strcmp(list->name,studentName)){
+	Student * cur = list;
+	list = list -> next;
+	free(cur);
+	cout << "1 student deleted\n";
+	return;
+    }
+    else{
+	Student * cur = list->next;
+	Student * prev = list;
+	while(cur != NULL && strcmp(cur->name,studentName)){
+	    prev = cur;
+	    cur = cur->next;
+	}
+	if(cur == NULL){
+	    cout << "Student name is not found\n";
+	    return;
+	}
+	prev->next = cur->next;
+	free(cur);
+	cout << "1 student deleted\n";	
+	return;
+    }
 }
 
 int main(){
@@ -81,11 +112,13 @@ int main(){
 		switch(a){
 		    case '1':{
 			char name[20];
+			string line;
+			cin.ignore();
 			cout << " [With file]\n";
 			cout << "Enter the file name: ";
-			cin >> name;
+		    	cin >> name;
 			addfile(name);
-		break;
+			break;
 		    }
 		    case '2':{
 			string line;
@@ -94,24 +127,29 @@ int main(){
 		    	cin.ignore();
 			cout << "Enter student's name: ";
 			getline(cin, line);
-			s->name = line;
+		    	strcpy(s->name,line.c_str());
+
 			cout << "Enter student's class: ";
 			getline(cin, line);
 			s->classNum = atoi(line.c_str()); 
+			
 			cout << "Enter student's grade: ";
 			getline(cin, line);
 			s->gradeNum = atoi(line.c_str());
+		
 			cout << "Enter student's major: ";
-			getline(cin, line);
-			s->major = line;
+		    	getline(cin, line);
+			strcpy(s->major,line.c_str());			
+
 			cout << "Enter student's gender(f/m): ";
-			getline(cin, line);
-			s->gender = line;
+			getline(cin,line);
+			strcpy(s->gender,line.c_str());
+					
 			cout << "Enter student's gpa: ";
 			getline(cin, line);
 		    	s->gpa = atof(line.c_str());
 			s->next = NULL;
-			if(list==NULL){
+			if(list == NULL){
 			    list = s;
 			}
 			else{
@@ -128,6 +166,17 @@ int main(){
 	        break;
 	    }
 	    case '2': {
+		string line;
+	    	char name[20];
+		cout << "\n [Delete Student]\n";
+	    	cout << "===============================================\n";
+		cin.ignore();
+		cout << "Enter student's name: ";
+		cin >> name;
+		remove(name);
+		break;
+	    }
+	    case '3': {
 	    	cout << "\n [Students]\n";
 	    	cout << "===============================================\n";
 		cout << "Name\tclass\tgrade\tmajor\tgender\tgpa\n";
