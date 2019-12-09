@@ -1,4 +1,4 @@
-hello 18 2 software f 3.8
-hi 17 3 software f 4.2
-asejf 17 3 math f 4.0
-sefj 17 2 math m 3.9
+hello 18 2 sw f 3.8
+hi 17 3 sw f 4.2
+abcd 17 3 math f 4.0
+efg 17 2 math m 3.9
