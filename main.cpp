@@ -74,6 +74,7 @@ void remove (char* studentName){
 	Student * cur = list;
 	list = list -> next;
 	free(cur);
+	studentNum--;
 	cout << "1 student deleted\n";
 	return;
     }
@@ -90,6 +91,7 @@ void remove (char* studentName){
 	}
 	prev->next = cur->next;
 	free(cur);
+	studentNum--;
 	cout << "1 student deleted\n";	
 	return;
     }
