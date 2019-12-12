@@ -1,10 +1,11 @@
+
 #include <fstream>
 #include <string>
 #include <string.h>
 #include <sstream>
 #include <iostream>
 using namespace std;
-
+int num = 0;
 struct Student {
     char name[20];
     int classNum;
@@ -49,7 +50,7 @@ void addfile(char* fileName){
 	s->classNum = atoi(sub[1].c_str()); 
 	s->gradeNum = atoi(sub[2].c_str());
 	strcpy(s->major,sub[3].c_str());
-    	strcpy(s->gender, sub[4].c_str());
+    strcpy(s->gender, sub[4].c_str());
 	s->gpa = atof(sub[5].c_str());
 	s->next = NULL;
 	if(list==NULL){
@@ -65,17 +66,17 @@ void addfile(char* fileName){
     return;
 }
 
-void remove (char* studentName){
+void remove_studentname (char* studentName){
     if(list == NULL){
         cout << "Student name is not found\n";
 	return;
     }
-    if(!strcmp(list->name,studentName)){
-	Student * cur = list;
-	list = list -> next;
-	free(cur);
-	cout << "1 student deleted\n";
-	return;
+		if(!strcmp(list->name,studentName)){
+		Student * cur = list;
+		list = list -> next;
+		free(cur);
+		cout << "1 student deleted\n";
+		return;
     }
     else{
 	Student * cur = list->next;
@@ -94,7 +95,179 @@ void remove (char* studentName){
 	return;
     }
 }
+bool remove_majorname(char* majorname) { //major deletion
+	if (list == NULL) {
+		return 0;
+	}
+	if (!strcmp(list->major, majorname)) {
+		Student * cur = list;
+		list = list->next;
+		free(cur);
+		num++;
+		return 1;
+	}
+	else {
+		Student * cur = list->next;
+		Student * prev = list;
+		while (cur != NULL && strcmp(cur->major, majorname)) {
+			prev = cur;
+			cur = cur->next;
+		}
+		if (cur == NULL) {
+			return 0;
+		}
+		prev->next = cur->next;
+		free(cur);
+		num++;
+		return 1;
+	}
+}
+bool remove_classnum(int classnum) { //remove by classnumber
+	int num = 0;
+	if (list == NULL) {
+		return 0;
+	}
+	if (classnum==list->classNum) {
+		Student * cur = list;
+		list = list->next;
+		free(cur);
+		num++;
+		return 1;
+	}
+	else {
+		Student * cur = list->next;
+		Student * prev = list;
+		while (cur != NULL &&classnum!=list->classNum) {
+			prev = cur;
+			cur = cur->next;
+		}
+		if (cur == NULL) {
+			return 0;
+		}
+		prev->next = cur->next;
+		free(cur);
+		num++;
+		return 1;
+	}
+}
+bool remove_gradenum(int gradenum) { //remove by grade number
 
+	if (list == NULL) {
+		return 0;
+	}
+	if (gradenum == list->gradeNum) {
+		Student * cur = list;
+		list = list->next;
+		free(cur);
+		num++;
+		return 1;
+	}
+	else {
+		Student * cur = list->next;
+		Student * prev = list;
+		while (cur != NULL && gradenum != list->gradeNum) {
+			prev = cur;
+			cur = cur->next;
+		}
+		if (cur == NULL) {
+			return 0;
+		}
+		prev->next = cur->next;
+		free(cur);
+		num++;
+		return 1;
+	}
+}
+bool remove_gender(char* gender2) {
+	if (list == NULL) {
+		printf("student with %s is not found",gender2);
+		return 0;
+	}
+	if (!strcmp(list->gender, gender2)) {
+		Student * cur = list;
+		list = list->next;
+		free(cur);
+		num++;
+		return 1;
+	}
+	else {
+		Student * cur = list->next;
+		Student * prev = list;
+		while (cur != NULL && strcmp(cur->gender, gender2)) {
+			prev = cur;
+			cur = cur->next;
+		}
+		if (cur == NULL) {
+			return 0;
+		}
+		prev->next = cur->next;
+		free(cur);
+		return 1;
+	}
+}
+bool remove_gpa(double GP) {
+	int index;
+	cout << "Which range of student you want to delete? greater(>=GPA): 1   less(<=GPA): 2 ";
+	cin >> index;
+	switch (index) {
+	case(1):
+		if (list == NULL) {
+			printf("student with gpa in range you've selected is not found");
+			return 0;
+		}
+		if (list->gpa>=GP) {
+			Student * cur = list;
+			list = list->next;
+			free(cur);
+			num++;
+			return 1;
+		}
+		else {
+			Student * cur = list->next;
+			Student * prev = list;
+			while (cur != NULL && list->gpa>=GP) {
+				prev = cur;
+				cur = cur->next;
+			}
+			if (cur == NULL) {
+				return 0;
+			}
+			prev->next = cur->next;
+			free(cur);
+			return 1;
+		}
+	case(2):
+		if (list == NULL) {
+			printf("student with gpa in range you've selected is not found");
+			return 0;
+		}
+		if (list->gpa <= GP) {
+			Student * cur = list;
+			list = list->next;
+			free(cur);
+			num++;
+			return 1;
+		}
+	
+		else {
+			Student * cur = list->next;
+			Student * prev = list;
+			while (cur != NULL && list->gpa>=GP) {
+				prev = cur;
+				cur = cur->next;
+			}
+			if (cur == NULL) {
+				return 0;
+			}
+			prev->next = cur->next;
+			free(cur);
+			return 1;
+		}
+	default:
+		break;
+	}
+	
+}
 int main(){
     char a, c;
     while (true) {
@@ -166,25 +339,87 @@ int main(){
 	        break;
 	    }
 	    case '2': {
-		string line;
-	    	char name[20];
-		cout << "\n [Delete Student]\n";
-	    	cout << "===============================================\n";
-		cin.ignore();
-		cout << "Enter student's name: ";
-		cin >> name;
-		remove(name);
-		break;
+			string line;
+			int number;
+			cout << "\n [Delete Student]\n";
+			cout << "===============================================\n";
+			cout << "Delete by name :1 || Delete by classnum : 2 || Delete by gradenum : 3 || Delete by major : 4 || Delete by gender : 5 || Delete by gpa : 6 ";
+			cin >> number;
+			switch (number) {
+			case 1: //학생이름으로제거
+				char name[20];
+				cin.ignore();
+				cout << "Enter student's name : ";
+				cin >> name;
+				remove_studentname(name);
+
+			case 2: //특정 반 번호를 가진 학생들을 모두제거
+				int classnum;
+				cin.ignore();
+				cout << "Enter class number :";
+				cin >> classnum;
+				while (remove_classnum(classnum) ) {
+				}
+				printf("%d students deleted", num);
+				num = 0;
+
+			case 3: //특정 학년 학생들 모두제거
+				int gradenum;
+				cin.ignore();
+				cout << "Enter grade number :";
+				cin >> gradenum;
+				while (remove_gradenum(gradenum)) {
+				}
+				printf("%d students deleted", num);
+				num = 0;
+
+			case 4:
+				char majorname[20];
+				cin.ignore();
+				cout << "Enter major :";
+				cin >> majorname;
+				while (remove_majorname(majorname)) {
+				}
+				printf("%d students deleted", num);
+				num = 0;
+
+			case 5:
+				char gender[2];
+				cin.ignore();
+				cout << "Enter gender :";
+				cin >> gender;
+				while (remove_gender(gender)) {
+				}
+				printf("%d students deleted", num);
+				num = 0;
+
+			case 6:
+				double gpa;
+				cin.ignore();
+				cout << "Enter gpa in your range :";
+				cin >> gpa;
+				while (remove_gpa(gpa)) {
+				}
+				printf("%d students deleted", num);
+				num = 0;
+
+			default:
+				break;
+			
+			
+			}
+			
+			break;
 	    }
 	    case '3': {
 	    	cout << "\n [Students]\n";
 	    	cout << "===============================================\n";
-		cout << "Name\tclass\tgrade\tmajor\tgender\tgpa\n";
-		cout << "-----------------------------------------------\n";
-		Student * cur = list;
-		while(cur != NULL){
-		    cout << cur->name << "\t" << cur->classNum << "\t" << cur->gradeNum << "\t" << cur->major << "\t" << cur->gender << "\t" << cur->gpa << endl;
-		cur = cur->next;
+			cout << "Name\tclass\tgrade\tmajor\tgender\tgpa\n";
+			cout << "-----------------------------------------------\n";
+			Student * cur = list;
+			while(cur != NULL){
+				cout << cur->name << "\t" << cur->classNum << "\t" << cur->gradeNum << "\t" << cur->major << "\t" << cur->gender << "\t" << cur->gpa << endl;
+			cur = cur->next;
 		}	
 	    }
 	    default:
